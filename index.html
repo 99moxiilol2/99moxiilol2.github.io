@@ -2296,97 +2296,50 @@ i like minecraft and stuff!
        ======================================================== */
 
     function updateProgress() {
+    const bar = document.getElementById("progressBar");
+    const current = document.getElementById("musicCurrent");
+    const duration = document.getElementById("musicDuration");
 
-      const bar =
-        document.getElementById(
-          "progressBar"
-        );
+    if (
+      !musicActive ||
+      !Number.isFinite(musicStart) ||
+      !Number.isFinite(musicEnd) ||
+      musicEnd <= musicStart
+    ) {
+      bar.style.width = "0%";
+      current.textContent = "0:00";
+      duration.textContent = "0:00";
 
-
-      const current =
-        document.getElementById(
-          "musicCurrent"
-        );
-
-
-      const duration =
-        document.getElementById(
-          "musicDuration"
-        );
-
-
-      if (
-        !musicActive ||
-        !musicStart ||
-        !musicEnd
-      ) {
-
-        bar.style.width =
-          "0%";
-
-
-        window.requestAnimationFrame(
-          updateProgress
-        );
-
-
-        return;
-
-      }
-
-
-      const total =
-        musicEnd -
-        musicStart;
-
-
-      let elapsed =
-        Date.now() -
-        musicStart;
-
-
-      elapsed =
-        Math.max(
-          0,
-          Math.min(
-            elapsed,
-            total
-          )
-        );
-
-
-      const percent =
-        total > 0
-          ? (
-              elapsed /
-              total
-            ) *
-            100
-          : 0;
-
-
-      bar.style.width =
-        percent +
-        "%";
-
-
-      current.textContent =
-        formatTime(
-          elapsed
-        );
-
-
-      duration.textContent =
-        formatTime(
-          total
-        );
-
-
-      window.requestAnimationFrame(
-        updateProgress
-      );
-
+      requestAnimationFrame(updateProgress);
+      return;
     }
+
+    const total = musicEnd - musicStart;
+
+      let elapsed = Date.now() - musicStart;
+
+    elapsed = Math.max(
+      0,
+      Math.min(elapsed, total)
+    );
+
+    const percent =
+      total > 0
+        ? (elapsed / total) * 100
+        : 0;
+
+    bar.style.width = percent + "%";
+
+    current.textContent =
+      formatTime(elapsed);
+
+    duration.textContent =
+      formatTime(total);
+
+    requestAnimationFrame(updateProgress);
+  }
+
+  updateProgress();
 
 
     /* ========================================================
